@@ -5,7 +5,7 @@ from collections import namedtuple
 Event = namedtuple('Event', 'time, spins, transitionto, kind')
 
 class Site(object):
-		def __init__(self,coord=(0,0), initialspin=0,neighbours=[(0,0),(0,0),(0,0),(0,0)],
+		def __init__(self,coord=(0,0), initialspin="u",neighbours=[(0,0),(0,0),(0,0),(0,0)],
 						isfundamental=0, tmax=1 ):
 			self.eventlist=[Event(time=0, 
 						   spins={"BWD":initialspin, "FWD":initialspin},
@@ -79,7 +79,7 @@ class Site(object):
 			
 
 class Lattice(object):
-	def __init__(self, beta=1,s1=2, s2=2, ics=[1,1]):
+	def __init__(self, beta=1,s1=2, s2=2, ics=["u","u"]):
 			self.s1 =s1
 			self.s2 =s2
 			self.nsites = s1*s2
@@ -107,16 +107,12 @@ class Lattice(object):
 			t3local =0.12
 			for coord, site in self.sites.items():
 					#u or ubar
-					if site.eventlist[0].spins["FWD"] == 0:
-							if site.isfundamental == 1:
-								t3local = 0.5
-							else:
-								t3local = -0.5
-					else: #d or dbar
-							if site.isfundamental == 1:
-								t3local = -0.5
-							else:
-								t3local = 0.5
+					t3dict = {"u":0.5, "d":-0.5, "s":0}
+					t3bardict = {"u":-0.5, "d":0.5, "s":0}
+					if site.isfundamental == 1:
+							t3local = t3dict[site.eventlist[0].spins["FWD"]]
+					else: 
+							t3local = t3bardict[site.eventlist[0].spins["FWD"]]
 					t3 = t3+ t3local
 			return t3*t3
 
@@ -124,11 +120,12 @@ class Lattice(object):
 class Worm(object):
 		def __init__(self, lattice):
 				self.lattice = lattice
-				
+					
 				self.headx = (0,0)
 				self.tailx = self.headx
 				self.headt = int(round(rnd.uniform()*lattice.tmax))
 				self.tailt = self.headt
+
 				if rnd.uniform()>0.5:
 					self.direction ="FWD"
 					self.reversedirection = "BWD"
@@ -136,10 +133,24 @@ class Worm(object):
 					self.direction ="BWD"
 					self.reversedirection = "BWD"
 
+				
+				# choose a valid worm type:
+				validtypesfund = {"FWD":{"u":["u>d","u>s"], "d":["d>u","d>s"], "s":["s>u","s>d"]},
+							  	  "BWD":{"u":["d>u","s>u"], "d":["u>d","s>d"], "s":["u>s","d>s"]}}
+				validtypesantifund ={ "FWD":validtypesfund["BWD"], "BWD":validtypesfund["BWD"] }
+
+				prevspin = self.lattice.sites[self.tailx].find_spin_at(self.tailt)
+				
+				if self.lattice.sites[self.tailx].isfundamental == 1:
+					self.wormtype = validtypesfund[self.direction][prevspin][rnd.uniform()>0.5]
+				else:
+					self.wormtype = validtypesantifund[self.direction][prevspin][rnd.uniform()>0.5]
+					
+				
+				
 				self.closed =False
 
 				#add an event for the tail:
-				prevspin = self.lattice.sites[self.tailx].find_spin_at(self.tailt)
 				tailspins = {"FWD":prevspin, "BWD":prevspin}
 				tailspins[self.direction] = self.newspin( prevspin)
 				self.lattice.sites[self.tailx].add_event_at(self.tailt, tailspins, None, "tail")
@@ -271,7 +282,7 @@ class Worm(object):
 				self.step()
 
 def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000):
-		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=[0,0])
+		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=["u","u"])
 		t3sq = int(0)
 		for i in range(termsteps):
 			w = Worm(lattice)
