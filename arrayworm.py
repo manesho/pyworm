@@ -125,7 +125,7 @@ class Worm(object):
 		def __init__(self, lattice):
 				self.lattice = lattice
 				
-				self.headx = (0,0)
+				self.headx = (int(rnd.uniform()*lattice.s1),int(rnd.uniform()*lattice.s2))
 				self.tailx = self.headx
 				self.headt = int(round(rnd.uniform()*lattice.tmax))
 				self.tailt = self.headt
