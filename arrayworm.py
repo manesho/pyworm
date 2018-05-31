@@ -209,12 +209,8 @@ class Worm(object):
 			dt = min(min(dtnbs), dtc)
 			
 			# identify the spins:
-			if self.direction == "FWD":
-				spinc = csnextevent.spins["BWD"]
-				spinnbs = [ev.spins["BWD"] for ev in nbnextevents ]
-			else:
-				spinc = csnextevent.spins["FWD"]
-				spinnbs = [ev.spins["FWD"] for ev in nbnextevents ]
+			spinc = csnextevent.spins[self.reversedirection]
+			spinnbs = [ev.spins[sefl.reversedirection] for ev in nbnextevents ]
 
 			# identify the decayconstants
 			decconsts = [self.decayconst(spinc, s2) for s2 in spinnbs]
@@ -263,14 +259,25 @@ class Worm(object):
 						otherboundaryevent.spins["BWD"]=newspin
 						return 0
 				if eventtoprocess.kind == "transition":
-						#print("trns")
-						self.headt = nextevtime
-						self.headx = eventtoprocess.transitionto
-						self.flip_dir()
-						#delete the event
-						self.lattice.sites[self.headx].delete_event_at(nextevtime)
-						self.lattice.sites[evccoord].delete_event_at(nextevtime)
-						return 0
+						# check if its a 2-f transition:
+						if self.newspin(spinc) == eventtoprocess.spins[self.direction]:
+							#print("trns")
+							self.headt = nextevtime
+							self.headx = eventtoprocess.transitionto
+							self.flip_dir()
+							#delete the event
+							self.lattice.sites[self.headx].delete_event_at(nextevtime)
+							self.lattice.sites[evccoord].delete_event_at(nextevtime)
+							return 0
+						else:
+							self.headt = nextevtime
+							self.headx = eventtoprocess.transitionto
+							# change the spins:
+							eventtoprocess.spins[self.reversedirection] = self.newspin(spinc)
+							transtoevent =  self.lattice.sites[self.headx].find_event_at(nextevtime)
+							transtoevent.spins[self.reversedirection] = self.newspin(spinc)
+							self.flip_dir()
+
 				if eventtoprocess.kind == "tail":
 						#print("tail")
 						self.lattice.sites[self.headx].delete_event_at(nextevtime)
