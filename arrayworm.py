@@ -120,8 +120,8 @@ class Lattice(object):
 class Worm(object):
 		def __init__(self, lattice):
 				self.lattice = lattice
-					
-				self.headx = (0,0)
+
+				self.headx = (int(rnd.uniform()*lattice.s1),int(rnd.uniform()*lattice.s2))
 				self.tailx = self.headx
 				self.headt = int(round(rnd.uniform()*lattice.tmax))
 				self.tailt = self.headt
@@ -161,10 +161,15 @@ class Worm(object):
 						return 0
 
 		def newspin(self,oldspin):
-			if oldspin == 0:
-				return 1
-			else:
-				return 0
+			# on a fundamental lattice, moving fwd or on an antifundamental sublattice moving backwrds
+			newspindict = {"u>d":{"u":"d", "d":"u"}, 
+						   "d>u":{"u":"s", "s":"u"},
+						   "u>s":{"u":"s", "s":"u"},
+						   "s>u":{"u":"s", "s":"u"},
+						   "d>s":{"d":"s", "s":"d"},
+						   "s>d":{"d":"s", "s":"d"}}
+			return newspindict[self.wormtype][oldspin]
+
  		
 		def sampledectime(self,decconsts, dt):
 			if sum(decconsts)!=0:
