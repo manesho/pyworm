@@ -131,13 +131,13 @@ class Worm(object):
 					self.reversedirection = "BWD"
 				else:
 					self.direction ="BWD"
-					self.reversedirection = "BWD"
+					self.reversedirection = "FWD"
 
 				
 				# choose a valid worm type:
 				validtypesfund = {"FWD":{"u":["u>d","u>s"], "d":["d>u","d>s"], "s":["s>u","s>d"]},
 							  	  "BWD":{"u":["d>u","s>u"], "d":["u>d","s>d"], "s":["u>s","d>s"]}}
-				validtypesantifund ={ "FWD":validtypesfund["BWD"], "BWD":validtypesfund["BWD"] }
+				validtypesantifund ={ "FWD":validtypesfund["BWD"], "BWD":validtypesfund["FWD"] }
 
 				prevspin = self.lattice.sites[self.tailx].find_spin_at(self.tailt)
 				
@@ -153,6 +153,8 @@ class Worm(object):
 				#add an event for the tail:
 				tailspins = {"FWD":prevspin, "BWD":prevspin}
 				tailspins[self.direction] = self.newspin( prevspin)
+				#print("tail inserted with", tailspins)
+				#print("worm starts", self.direction)
 				self.lattice.sites[self.tailx].add_event_at(self.tailt, tailspins, None, "tail")
 		def decayconst(self,spin1,spin2):
 				if spin1==spin2:
@@ -162,12 +164,12 @@ class Worm(object):
 
 		def newspin(self,oldspin):
 			# on a fundamental lattice, moving fwd or on an antifundamental sublattice moving backwrds
-			newspindict = {"u>d":{"u":"d", "d":"u"}, 
-						   "d>u":{"u":"s", "s":"u"},
-						   "u>s":{"u":"s", "s":"u"},
-						   "s>u":{"u":"s", "s":"u"},
-						   "d>s":{"d":"s", "s":"d"},
-						   "s>d":{"d":"s", "s":"d"}}
+			newspindict = {"u>d":{"u":"d", "d":"u", "s":"*"}, 
+						   "d>u":{"u":"d", "d":"u", "s":"*"},
+						   "u>s":{"u":"s", "s":"u", "d":"*"},
+						   "s>u":{"u":"s", "s":"u", "d":"*"},
+						   "d>s":{"d":"s", "s":"d", "u":"*"},
+						   "s>d":{"d":"s", "s":"d", "u":"*"}}
 			return newspindict[self.wormtype][oldspin]
 
  		
@@ -191,17 +193,19 @@ class Worm(object):
 		def flip_dir(self):
 				if self.direction == "FWD":
 					self.direction ="BWD"
-					self.reversedirection = "BWD"
+					self.reversedirection = "FWD"
 				else:
 					self.direction ="FWD"
-					self.reversedirection = "FWD"
+					self.reversedirection = "BWD"
 	
 
 		def step(self):
-			
+			#print("step")
 			#first find the closest events in the direction on the current and the neighbour sites:
 			nbs = self.lattice.sites[self.headx].neighbours;
-			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction) for nb in nbs]
+			#print(self.headt, self.direction)
+			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction)
+									for nb in nbs]
 			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
 			
 			dtnbs = [abs(ev.time - self.headt) for ev in nbnextevents ]
@@ -210,10 +214,16 @@ class Worm(object):
 			
 			# identify the spins:
 			spinc = csnextevent.spins[self.reversedirection]
-			spinnbs = [ev.spins[sefl.reversedirection] for ev in nbnextevents ]
+			if self.newspin(spinc) == "*":
+				print("worm on invalid site!")
+				print(self.wormtype,"worm on spin", spinc)
+
+			spinnbs = [ev.spins[self.reversedirection] for ev in nbnextevents ]
+			#print(spinc, spinnbs)
 
 			# identify the decayconstants
 			decconsts = [self.decayconst(spinc, s2) for s2 in spinnbs]
+			#print("dcs:", decconsts)
 			t = self.sampledectime(decconsts, dt)
 			# if the time is smaller than dr -> jump
 			if t < dt:
@@ -222,17 +232,24 @@ class Worm(object):
 					t2jump = self.headt + t
 				else:
 					t2jump = self.headt -t
+			
+				# check weather you are allowed to gothere:
 				
 				#choose a decayneighbour:
 				nbindex = self.choose_decnb(decconsts)
 				decaynbcoord = nbs[nbindex]
+				
+				if self.lattice.sites[decaynbcoord].find_spin_at(t2jump) != spinc:
+						print("uiui")
 				# add an event on the current site:
+				if self.newspin(spinc) == "*":
+					print("try to assign * in a jump")
+				
 				newspins = {"FWD":self.newspin(spinc), "BWD":self.newspin(spinc)}
 				newspins[self.direction] = spinc
+
 				self.lattice.sites[self.headx].add_event_at(t2jump,newspins,decaynbcoord,"transition")
 				# add an event on the neighbour site
-				newspins = {"FWD":self.newspin(spinnbs[nbindex]), "BWD":self.newspin(spinnbs[nbindex])}
-				newspins[self.direction] = spinnbs[nbindex]
 				self.lattice.sites[decaynbcoord].add_event_at(t2jump,newspins,self.headx,"transition")
 				# move the worm head:
 				self.headt = t2jump
@@ -249,6 +266,8 @@ class Worm(object):
 				if eventtoprocess.kind == "boundary":
 						#print("bdry")
 						newspin = self.newspin(spinc)
+						if newspin == "*":
+								print("try to assign * to boundary")
 						eventtoprocess.spins["FWD"]=newspin
 						eventtoprocess.spins["BWD"]=newspin
 						#update the other boundary as well:
@@ -259,9 +278,10 @@ class Worm(object):
 						otherboundaryevent.spins["BWD"]=newspin
 						return 0
 				if eventtoprocess.kind == "transition":
+						#print("trns")
 						# check if its a 2-f transition:
 						if self.newspin(spinc) == eventtoprocess.spins[self.direction]:
-							#print("trns")
+							#print("2f")
 							self.headt = nextevtime
 							self.headx = eventtoprocess.transitionto
 							self.flip_dir()
@@ -270,24 +290,29 @@ class Worm(object):
 							self.lattice.sites[evccoord].delete_event_at(nextevtime)
 							return 0
 						else:
+							#print("3f")
 							self.headt = nextevtime
 							self.headx = eventtoprocess.transitionto
 							# change the spins:
+							newspin = self.newspin(spinc)
+							if newspin == "*":
+								print("try to assign * in 3f transition")
 							eventtoprocess.spins[self.reversedirection] = self.newspin(spinc)
 							transtoevent =  self.lattice.sites[self.headx].find_event_at(nextevtime)
 							transtoevent.spins[self.reversedirection] = self.newspin(spinc)
 							self.flip_dir()
+							return 0
 
 				if eventtoprocess.kind == "tail":
 						#print("tail")
 						self.lattice.sites[self.headx].delete_event_at(nextevtime)
 						self.closed = True
 						return 1
-			
-			# if not: move the head
-			#print("justmove")
-			self.headt = self.headt+dt if self.direction=="FWD" else self.headt-dt
-			return 0
+			else:
+				# if not: move the head
+				#print("justmove")
+				self.headt = self.headt+dt if self.direction=="FWD" else self.headt-dt
+				return 0
 
 		def run(self):
 			while self.closed == False:
