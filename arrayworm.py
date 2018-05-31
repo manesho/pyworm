@@ -318,8 +318,8 @@ class Worm(object):
 			while self.closed == False:
 				self.step()
 
-def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000):
-		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=["u","u"])
+def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000, ics=["u","u"]):
+		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=ics)
 		t3sq = int(0)
 		for i in range(termsteps):
 			w = Worm(lattice)
@@ -327,6 +327,6 @@ def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000):
 		for i in range(wormruns):
 			w=Worm(lattice)
 			w.run()
-			t3sq = t3sq + int(lattice.t3squared())
+			t3sq = t3sq + int(4*lattice.t3squared())
 
-		return t3sq/wormruns
+		return t3sq/(4*wormruns)
