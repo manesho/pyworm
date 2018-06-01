@@ -224,7 +224,8 @@ class Worm(object):
 				if decnbchannel["channel"] == "=": self.flip_dir()
 				return 0
 			if decnbchannel["channel"] == "b":
-				print("bounce")
+				self.headt = t2jump
+				self.flip_dir()
 				return 0
 
 		def process_event(self,dt,currentspin):
