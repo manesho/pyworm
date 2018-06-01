@@ -1,5 +1,6 @@
 from numpy import random as rnd
 from collections import namedtuple
+import rulegenerator as rgen
 
 #defining the data structure
 Event = namedtuple('Event', 'time, spins, transitionto, kind')
@@ -93,112 +94,7 @@ class Lattice(object):
 									tmax= self.tmax,
 									)
 							for x1 in range(0,self.s1) for x2 in range(0, self.s2)}
-
-			self.wormdecayrules={
-							"u>d":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	},
-							"d>u":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	},
-							"u>s":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	},
-							"s>u":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	},
-							"d>s":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	},
-							"s>d":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  },
-								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
-										   	  "neq":{"=":0,"x":0,"b":0},
-											  "3f":{"=":0,"x":0,"b":0}
-											  }
-								   	}
-							}
-
+			self.wormdecayrules=rgen.generate_decayrules()
 	def nblist(self,x1,x2):
 			return [((x1+1)%self.s1, x2),((x1-1)%self.s1, x2),(x1,(x2+1)%self.s2),(x1,(x2-1)%self.s2)]
 	
@@ -220,6 +116,12 @@ class Lattice(object):
 							t3local = t3bardict[site.eventlist[0].spins["FWD"]]
 					t3 = t3+ t3local
 			return t3
+	def check_consistency(self):
+			for site in self.sites.values():
+					for i in range(len(site.eventlist)):
+							print(site.eventlist[i].spins["BWD"],"--",site.eventlist[i].spins["FWD"])
+					print("@@@@@@@@@@@@@22")
+						
 
 
 class Worm(object):
@@ -258,21 +160,10 @@ class Worm(object):
 				#add an event for the tail:
 				tailspins = {"FWD":prevspin, "BWD":prevspin}
 				tailspins[self.direction] = self.newspin( prevspin)
-				#print("tail inserted with", tailspins)
-				#print("worm starts", self.direction)
 				self.lattice.sites[self.tailx].add_event_at(self.tailt, tailspins, None, "tail")
-		def decayconst(self,spin1,spin2,isfundamental):
-				if spin1==spin2:
-						state = "eq"
-				elif spin2== self.newspin(spin1):
-						state = "2f"
-				else:
-						state = "3f"
-				print(state)
-				return self.decayrules[(self.direction,isfundamental)][state]
+
 
 		def newspin(self,oldspin):
-			# on a fundamental lattice, moving fwd or on an antifundamental sublattice moving backwrds
 			newspindict = {"u>d":{"u":"d", "d":"u", "s":"*"}, 
 						   "d>u":{"u":"d", "d":"u", "s":"*"},
 						   "u>s":{"u":"s", "s":"u", "d":"*"},
@@ -282,23 +173,20 @@ class Worm(object):
 			return newspindict[self.wormtype][oldspin]
 
  		
-
-		def sampledectime(self,decconsts, dt):
-			if sum(decconsts)!=0:
-				#t as it should be:
-				tfloat = rnd.exponential(1/sum(decconsts)) 
-				ts = int(round((tfloat / self.lattice.beta) * self.lattice.tmax))
-			else:
-				ts = dt
-			return ts
-
-		def choose_decnb(self, decconsts):
+		def move_head_t(self, dt):
+			self.headt = self.headt+dt if self.direction=="FWD" else self.headt-dt
+			return
+	
+		def choose_decnb_and_channel(self, decayconsts):
 			cumprob =0
 			rnum =rnd.uniform()
-			for i in range(4):
-				cumprob = cumprob + decconsts[i]/sum(decconsts)		
-				if cumprob >= rnum:
-					return i
+			dctot = sum([sum(dcnb[1].values()) for dcnb in decayconsts])
+			for decnb in decayconsts:
+					for channel in ["b", "x", "="]:
+							cumprob = cumprob + decnb[1][channel]/dctot
+							if cumprob >= rnum:
+									return {"neighbour":decnb[0], "channel":channel}
+			print("somethings wrong in choose decnb and channel")
 
 		def flip_dir(self):
 				if self.direction == "FWD":
@@ -308,39 +196,41 @@ class Worm(object):
 					self.direction ="FWD"
 					self.reversedirection = "BWD"
 
-		def jump(self, t, decconsts, nbcoords, currentspin):	
-				if self.direction == "FWD":
-					t2jump = self.headt + t
-				else:
-					t2jump = self.headt -t
-				#choose a decayneighbour:
-				nbindex = self.choose_decnb(decconsts)
-				decaynbcoord = nbcoords[nbindex]
-				# add an event on the current site:
+		# creates a transtion at self.headx, self.headt +/- dt
+		# move the head to the new site
+		def jump(self, dt, decconsts, currentspin):	
+			#1 determine to which neighbour to decayto:
+			#	loop over neighbours
+			decnbchannel = self.choose_decnb_and_channel(decconsts)
+			t2jump = self.headt + dt if self.direction == "FWD" else self.headt- dt
+			
+			if decnbchannel["channel"] == "=" or decnbchannel["channel"] == "x":
+				#print(decnbchannel["channel"])
 				if self.newspin(currentspin) == "*":
 					print("try to assign * in a jump")
-				
 				newspins = {"FWD":self.newspin(currentspin), "BWD":self.newspin(currentspin)}
 				newspins[self.direction] = currentspin 
-
+				decaynbcoord = decnbchannel["neighbour"]
 				self.lattice.sites[self.headx].add_event_at(t2jump,newspins,decaynbcoord,"transition")
 				# add an event on the neighbour site
 				self.lattice.sites[decaynbcoord].add_event_at(t2jump,newspins,self.headx,"transition")
 				# move the worm head:
 				self.headt = t2jump
 				self.headx = decaynbcoord
-				self.flip_dir()
+				if decnbchannel["channel"] == "=": self.flip_dir()
+				return 0
+			if decnbchannel["channel"] == "b":
+				print("bounce")
 				return 0
 
-
-		def process_event(self,dt, spinc):
+		def process_event(self,dt,currentspin):
 			#print("process event")
 				nextevtime = self.headt+dt if self.direction=="FWD" else self.headt-dt
 				evccoord = self.headx
 				eventtoprocess = self.lattice.sites[evccoord].find_event_at(nextevtime)
 				if eventtoprocess.kind == "boundary":
 						#print("bdry")
-						newspin = self.newspin(spinc)
+						newspin = self.newspin(currentspin)
 						if newspin == "*":
 								print("try to assign * to boundary")
 						eventtoprocess.spins["FWD"]=newspin
@@ -355,7 +245,7 @@ class Worm(object):
 				if eventtoprocess.kind == "transition":
 						#print("trns")
 						# check if its a 2-f transition:
-						if self.newspin(spinc) == eventtoprocess.spins[self.direction]:
+						if self.newspin(currentspin) == eventtoprocess.spins[self.direction]:
 							#print("2f")
 							self.headt = nextevtime
 							self.headx = eventtoprocess.transitionto
@@ -369,27 +259,26 @@ class Worm(object):
 							self.headt = nextevtime
 							self.headx = eventtoprocess.transitionto
 							# change the spins:
-							newspin = self.newspin(spinc)
+							newspin = self.newspin(currentspin)
 							if newspin == "*":
 								print("try to assign * in 3f transition")
-							eventtoprocess.spins[self.reversedirection] = self.newspin(spinc)
+							eventtoprocess.spins[self.reversedirection] = self.newspin(currentspin)
 							transtoevent =  self.lattice.sites[self.headx].find_event_at(nextevtime)
-							transtoevent.spins[self.reversedirection] = self.newspin(spinc)
+							transtoevent.spins[self.reversedirection] = self.newspin(currentspin)
 							self.flip_dir()
 							return 0
-
 				if eventtoprocess.kind == "tail":
 						#print("tail")
 						self.lattice.sites[self.headx].delete_event_at(nextevtime)
 						self.closed = True
 						return 1
 
-
-		def step(self):
-			#print("step")
-			#first find the closest events in the direction on the current and the neighbour sites:
+		# returns the absolute value time difference from the worm
+		# head to the next events on the current and neighboursites,
+		# from self.headx, self.headt in self.direction
+		def find_time_to_nextevents(self):
 			nbs = self.lattice.sites[self.headx].neighbours;
-			#print(self.headt, self.direction)
+
 			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction)
 									for nb in nbs]
 			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
@@ -397,39 +286,67 @@ class Worm(object):
 			dtnbs = [abs(ev.time - self.headt) for ev in nbnextevents ]
 			dtc = abs(csnextevent.time - self.headt)
 			dt = min(min(dtnbs), dtc)
-			
-			# identify the spins:
-			spinc = csnextevent.spins[self.reversedirection]
-			if self.newspin(spinc) == "*":
-				print("worm on invalid site!")
-				print(self.wormtype,"worm on spin", spinc)
+			return {"min":dt, "current":dtc}
 
+		
+		def get_state(self, spin1, spin2):
+				if spin1==spin2:
+						return "eq"
+				elif spin1 == self.newspin(spin2):
+						return "2f"
+				else:
+						return "3f"
+
+		# returns the decay constant dicts for all possible decay neighbours and channels,
+		# starting from self.headx and self.headt
+		# uses the spin of the nextevents in reversedirections
+		# on the sites to ensure that te proper spin is taken.
+		# returns an array with four elements, one for each neighbour (or 2 for each neighbours
+		# in the 2by2 case)
+		# each element is a tuple containing the nb coordinate and a dict {'channel': lambda} 
+		def get_decay_constants(self):
+			nbcoords = self.lattice.sites[self.headx].neighbours;
+			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction)
+									for nb in nbcoords]
 			spinnbs = [ev.spins[self.reversedirection] for ev in nbnextevents ]
-			#print(spinc, spinnbs)
+			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
+			spinc = csnextevent.spins[self.reversedirection]
+			# get the state
+			states = [self.get_state(spinc, spinnb) for spinnb in spinnbs]
+			return [(nbcoords[i], self.decayrules[self.direction][states[i]]) for i in range(4)]
 
-			# identify the decayconstants
-			isfundamental = self.lattice.sites[self.headx].isfundamental
-			# since doubled entries are deleted, for two spins we have to change the exact diagonalization
-			# code
-			decconsts = {(nbs[i], channel):self.decayconst(spinc,spinnbs[i],isfundamental)[channel]
-							for i in range(4), for channel in ["=", "b","x"]}
-			#print("dcs:", decconsts)
-			t = self.sampledectime(decconsts, dt)
-			# if the time is smaller than dr -> jump
-			if t < dt:
-				self.jump(t,decconsts, nbs, spinc)
-				return 0
-				#print("decay")
-							
-			#if the next event is on the current site
-			if dtc == dt:
-				self.process_event(dt,spinc)
-			
-			# if not: move the head
+		def sample_decay_time(self,decayconsts):
+			dctot = sum([ sum(dcnb[1].values()) for dcnb in decayconsts])
+			if dctot!=0:
+				#t as it should be:
+				tfloat = rnd.exponential(1/dctot) 
+				# convert to integer time
+				ts = int(round((tfloat / self.lattice.beta) * self.lattice.tmax))
 			else:
-				#print("justmove")
-				self.headt = self.headt+dt if self.direction=="FWD" else self.headt-dt
-				return 0
+				ts = self.lattice.tmax
+			return ts
+	
+		def step(self):
+			timediffs = self.find_time_to_nextevents()
+			decayconsts = self.get_decay_constants()
+			tsampled = self.sample_decay_time(decayconsts)
+	
+			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
+			currentspin = csnextevent.spins[self.reversedirection]
+
+ 			# if the time is smaller than dr -> jump
+			if tsampled < timediffs["min"]:
+				self.jump(tsampled, decayconsts, currentspin)
+				return 
+			#if the next event is on the current site
+			elif timediffs["min"] == timediffs["current"]:
+				self.process_event(timediffs["min"],currentspin)
+				return 
+			# if not: move the head the to position where the next event on the neighboursites is
+			else:
+				self.move_head_t(timediffs["min"])
+				return 
+		
 
 		def run(self):
 			while self.closed == False:
