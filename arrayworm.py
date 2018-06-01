@@ -1,5 +1,6 @@
 import importlib as imp
 from numpy import random as rnd
+import numpy as np
 from collections import namedtuple
 import rulegenerator as rgen
 imp.reload(rgen)
@@ -82,7 +83,7 @@ class Site(object):
 			
 
 class Lattice(object):
-	def __init__(self, beta=1,s1=2, s2=2, ics=["u","u"]):
+	def __init__(self,mu3=0, beta=1,s1=2, s2=2, ics=["u","u"]):
 			self.s1 =s1
 			self.s2 =s2
 			self.nsites = s1*s2
@@ -96,8 +97,8 @@ class Lattice(object):
 									tmax= self.tmax,
 									)
 							for x1 in range(0,self.s1) for x2 in range(0, self.s2)}
-			self.wormdecayrules=rgen.generate_decayrules()
-			self.wormtransitionrules = rgen.generate_2f_transitio_nrules()
+			self.wormdecayrules=rgen.generate_decayrules(mu3)
+			self.wormtransitionrules = rgen.generate_2f_transitio_nrules(mu3)
 	def nblist(self,x1,x2):
 			return [((x1+1)%self.s1, x2),((x1-1)%self.s1, x2),(x1,(x2+1)%self.s2),(x1,(x2-1)%self.s2)]
 	
@@ -361,9 +362,10 @@ class Worm(object):
 
 
 
-def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000, ics=["u","u"]):
-		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=ics)
+def launch_simulation(beta =1 ,mu3=0, termsteps=1000, wormruns = 10000, ics=["u","u"]):
+		lattice = Lattice(beta=beta,mu3=mu3, s1 =2,s2=2, ics=ics)
 		t3sq = int(0)
+		t3 = int(0)
 		for i in range(termsteps):
 			w = Worm(lattice)
 			w.run()
@@ -371,5 +373,6 @@ def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000, ics=["u","u"])
 			w=Worm(lattice)
 			w.run()
 			t3sq = t3sq + int(4*(lattice.t3()**2))
+			t3  = t3 + int(2*lattice.t3())
 
-		return t3sq/(4*wormruns)
+		return t3/(2*wormruns)
