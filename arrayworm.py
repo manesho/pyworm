@@ -2,11 +2,67 @@ import importlib as imp
 from numpy import random as rnd
 import numpy as np
 from collections import namedtuple
+import bisect 
 import rulegenerator as rgen
 imp.reload(rgen)
 
 #defining the data structure
 Event = namedtuple('Event', 'time, spins, transitionto, kind')
+
+class TestSite(object):
+		def __init__(self,coord=(0,0), initialspin="u",neighbours=[(0,0),(0,0),(0,0),(0,0)],
+						isfundamental=0, tmax=1 ):
+			self.isfundamental = isfundamental
+			self.neighbours = neighbours
+			self.eventlist={0:Event(time=0, 
+						   spins={"BWD":initialspin, "FWD":initialspin},
+						   transitionto=None,
+						   kind = "boundary") ,
+						   tmax:Event( time= tmax, 
+						   spins={"BWD":initialspin, "FWD":initialspin},
+						   transitionto=None,
+						   kind = "boundary")
+							}
+			self.evtimes = [0]
+			bisect.insort(self.evtimes, tmax)
+		
+		def find_event_at(self,time):
+				return self.eventlist[time]
+		
+		def find_spin_at(self,time):
+				prevtimeindex = bisect.bisect(self.evtimes, time)-1
+				if self.evtimes[prevtimeindex] == time:
+						print("ther is an event at ", time)
+						return None
+				else:
+					return self.eventlist[self.evtimes[prevtimeindex+1]].spins["BWD"]
+
+		def find_event_in_dir(self,time, direction):
+				# is there an event at time?
+				if time in self.eventlist:
+						if direction == "FWD":
+								nexttime = self.evtimes[bisect.bisect(self.evtimes, time)]
+								return self.eventlist[nexttime]
+						else:
+								nexttime = self.evtimes[bisect.bisect(self.evtimes, time)-2]
+								return self.eventlist[nexttime]
+				else:
+						if direction == "FWD":
+								nexttime = self.evtimes[bisect.bisect(self.evtimes, time)]
+								return self.eventlist[nexttime]
+						else:
+								nexttime = self.evtimes[bisect.bisect(self.evtimes, time)-1]
+								return self.eventlist[nexttime]
+		def add_event_at(self, time, spins, transitionto, kind):
+				self.eventlist.update({time: 
+							     Event(time=time, spins=spins, transitionto=transitionto, kind=kind)})
+				bisect.insort(self.evtimes, time)
+	
+		def delete_event_at(self, time):
+				self.eventlist.pop(time)
+				self.evtimes.pop(bisect.bisect_left(self.evtimes, time))
+
+
 
 class Site(object):
 		def __init__(self,coord=(0,0), initialspin="u",neighbours=[(0,0),(0,0),(0,0),(0,0)],
@@ -90,7 +146,7 @@ class Lattice(object):
 			self.beta = beta
 			#work with integer time:
 			self.tmax = 10000000000
-			self.sites= {(x1,x2):Site(coord =(x1,x2),
+			self.sites= {(x1,x2):TestSite(coord =(x1,x2),
 									initialspin = ics[self.isfund(x1,x2)],
 									neighbours =self.nblist(x1,x2),
 									isfundamental= self.isfund(x1,x2),
