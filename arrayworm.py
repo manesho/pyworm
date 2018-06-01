@@ -1,6 +1,8 @@
+import importlib as imp
 from numpy import random as rnd
 from collections import namedtuple
 import rulegenerator as rgen
+imp.reload(rgen)
 
 #defining the data structure
 Event = namedtuple('Event', 'time, spins, transitionto, kind')
@@ -95,6 +97,7 @@ class Lattice(object):
 									)
 							for x1 in range(0,self.s1) for x2 in range(0, self.s2)}
 			self.wormdecayrules=rgen.generate_decayrules()
+			self.wormtransitionrules = rgen.generate_2f_transitio_nrules()
 	def nblist(self,x1,x2):
 			return [((x1+1)%self.s1, x2),((x1-1)%self.s1, x2),(x1,(x2+1)%self.s2),(x1,(x2-1)%self.s2)]
 	
@@ -155,6 +158,7 @@ class Worm(object):
 					
 				
 				self.decayrules = self.lattice.wormdecayrules[self.wormtype]	
+				self.transitionrules = self.lattice.wormtransitionrules[self.wormtype]	
 				self.closed =False
 
 				#add an event for the tail:
@@ -249,7 +253,9 @@ class Worm(object):
 							#print("2f")
 							self.headt = nextevtime
 							self.headx = eventtoprocess.transitionto
-							self.flip_dir()
+							# resolve the transition as x or = according to the transition rules
+							if rnd.uniform() < self.transitionrules[self.direction]["="]:
+								self.flip_dir()
 							#delete the event
 							self.lattice.sites[self.headx].delete_event_at(nextevtime)
 							self.lattice.sites[evccoord].delete_event_at(nextevtime)
