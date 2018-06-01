@@ -93,7 +93,112 @@ class Lattice(object):
 									tmax= self.tmax,
 									)
 							for x1 in range(0,self.s1) for x2 in range(0, self.s2)}
-	
+
+			self.wormdecayrules={
+							"u>d":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	},
+							"d>u":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	},
+							"u>s":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	},
+							"s>u":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	},
+							"d>s":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	},
+							"s>d":{("FWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("FWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",1):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  },
+								   ("BWD",0):{"eq":{"=":0.5,"x":0,"b":0},
+										   	  "neq":{"=":0,"x":0,"b":0},
+											  "3f":{"=":0,"x":0,"b":0}
+											  }
+								   	}
+							}
+
 	def nblist(self,x1,x2):
 			return [((x1+1)%self.s1, x2),((x1-1)%self.s1, x2),(x1,(x2+1)%self.s2),(x1,(x2-1)%self.s2)]
 	
@@ -102,7 +207,7 @@ class Lattice(object):
 						return 1
 				else:
 						return 0
-	def t3squared(self):
+	def t3(self):
 			t3 =0.
 			t3local =0.12
 			for coord, site in self.sites.items():
@@ -114,7 +219,7 @@ class Lattice(object):
 					else: 
 							t3local = t3bardict[site.eventlist[0].spins["FWD"]]
 					t3 = t3+ t3local
-			return t3*t3
+			return t3
 
 
 class Worm(object):
@@ -147,7 +252,7 @@ class Worm(object):
 					self.wormtype = validtypesantifund[self.direction][prevspin][rnd.uniform()>0.5]
 					
 				
-				
+				self.decayrules = self.lattice.wormdecayrules[self.wormtype]	
 				self.closed =False
 
 				#add an event for the tail:
@@ -156,11 +261,15 @@ class Worm(object):
 				#print("tail inserted with", tailspins)
 				#print("worm starts", self.direction)
 				self.lattice.sites[self.tailx].add_event_at(self.tailt, tailspins, None, "tail")
-		def decayconst(self,spin1,spin2):
+		def decayconst(self,spin1,spin2,isfundamental):
 				if spin1==spin2:
-						return 0.5
+						state = "eq"
+				elif spin2== self.newspin(spin1):
+						state = "2f"
 				else:
-						return 0
+						state = "3f"
+				print(state)
+				return self.decayrules[(self.direction,isfundamental)][state]
 
 		def newspin(self,oldspin):
 			# on a fundamental lattice, moving fwd or on an antifundamental sublattice moving backwrds
@@ -173,6 +282,7 @@ class Worm(object):
 			return newspindict[self.wormtype][oldspin]
 
  		
+
 		def sampledectime(self,decconsts, dt):
 			if sum(decconsts)!=0:
 				#t as it should be:
@@ -197,56 +307,21 @@ class Worm(object):
 				else:
 					self.direction ="FWD"
 					self.reversedirection = "BWD"
-	
 
-		def step(self):
-			#print("step")
-			#first find the closest events in the direction on the current and the neighbour sites:
-			nbs = self.lattice.sites[self.headx].neighbours;
-			#print(self.headt, self.direction)
-			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction)
-									for nb in nbs]
-			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
-			
-			dtnbs = [abs(ev.time - self.headt) for ev in nbnextevents ]
-			dtc = abs(csnextevent.time - self.headt)
-			dt = min(min(dtnbs), dtc)
-			
-			# identify the spins:
-			spinc = csnextevent.spins[self.reversedirection]
-			if self.newspin(spinc) == "*":
-				print("worm on invalid site!")
-				print(self.wormtype,"worm on spin", spinc)
-
-			spinnbs = [ev.spins[self.reversedirection] for ev in nbnextevents ]
-			#print(spinc, spinnbs)
-
-			# identify the decayconstants
-			decconsts = [self.decayconst(spinc, s2) for s2 in spinnbs]
-			#print("dcs:", decconsts)
-			t = self.sampledectime(decconsts, dt)
-			# if the time is smaller than dr -> jump
-			if t < dt:
-				#print("decay")
+		def jump(self, t, decconsts, nbcoords, currentspin):	
 				if self.direction == "FWD":
 					t2jump = self.headt + t
 				else:
 					t2jump = self.headt -t
-			
-				# check weather you are allowed to gothere:
-				
 				#choose a decayneighbour:
 				nbindex = self.choose_decnb(decconsts)
-				decaynbcoord = nbs[nbindex]
-				
-				if self.lattice.sites[decaynbcoord].find_spin_at(t2jump) != spinc:
-						print("uiui")
+				decaynbcoord = nbcoords[nbindex]
 				# add an event on the current site:
-				if self.newspin(spinc) == "*":
+				if self.newspin(currentspin) == "*":
 					print("try to assign * in a jump")
 				
-				newspins = {"FWD":self.newspin(spinc), "BWD":self.newspin(spinc)}
-				newspins[self.direction] = spinc
+				newspins = {"FWD":self.newspin(currentspin), "BWD":self.newspin(currentspin)}
+				newspins[self.direction] = currentspin 
 
 				self.lattice.sites[self.headx].add_event_at(t2jump,newspins,decaynbcoord,"transition")
 				# add an event on the neighbour site
@@ -256,10 +331,10 @@ class Worm(object):
 				self.headx = decaynbcoord
 				self.flip_dir()
 				return 0
-			
-			#if the next event is on the current site
-			if dtc == dt:
-				#print("process event")
+
+
+		def process_event(self,dt, spinc):
+			#print("process event")
 				nextevtime = self.headt+dt if self.direction=="FWD" else self.headt-dt
 				evccoord = self.headx
 				eventtoprocess = self.lattice.sites[evccoord].find_event_at(nextevtime)
@@ -308,8 +383,50 @@ class Worm(object):
 						self.lattice.sites[self.headx].delete_event_at(nextevtime)
 						self.closed = True
 						return 1
+
+
+		def step(self):
+			#print("step")
+			#first find the closest events in the direction on the current and the neighbour sites:
+			nbs = self.lattice.sites[self.headx].neighbours;
+			#print(self.headt, self.direction)
+			nbnextevents = [self.lattice.sites[nb].find_event_in_dir(self.headt, self.direction)
+									for nb in nbs]
+			csnextevent = self.lattice.sites[self.headx].find_event_in_dir(self.headt,self.direction)
+			
+			dtnbs = [abs(ev.time - self.headt) for ev in nbnextevents ]
+			dtc = abs(csnextevent.time - self.headt)
+			dt = min(min(dtnbs), dtc)
+			
+			# identify the spins:
+			spinc = csnextevent.spins[self.reversedirection]
+			if self.newspin(spinc) == "*":
+				print("worm on invalid site!")
+				print(self.wormtype,"worm on spin", spinc)
+
+			spinnbs = [ev.spins[self.reversedirection] for ev in nbnextevents ]
+			#print(spinc, spinnbs)
+
+			# identify the decayconstants
+			isfundamental = self.lattice.sites[self.headx].isfundamental
+			# since doubled entries are deleted, for two spins we have to change the exact diagonalization
+			# code
+			decconsts = {(nbs[i], channel):self.decayconst(spinc,spinnbs[i],isfundamental)[channel]
+							for i in range(4), for channel in ["=", "b","x"]}
+			#print("dcs:", decconsts)
+			t = self.sampledectime(decconsts, dt)
+			# if the time is smaller than dr -> jump
+			if t < dt:
+				self.jump(t,decconsts, nbs, spinc)
+				return 0
+				#print("decay")
+							
+			#if the next event is on the current site
+			if dtc == dt:
+				self.process_event(dt,spinc)
+			
+			# if not: move the head
 			else:
-				# if not: move the head
 				#print("justmove")
 				self.headt = self.headt+dt if self.direction=="FWD" else self.headt-dt
 				return 0
@@ -317,6 +434,8 @@ class Worm(object):
 		def run(self):
 			while self.closed == False:
 				self.step()
+
+
 
 def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000, ics=["u","u"]):
 		lattice = Lattice(beta=beta, s1 =2,s2=2, ics=ics)
@@ -327,6 +446,6 @@ def launch_simulation(beta =1 , termsteps=1000, wormruns = 10000, ics=["u","u"])
 		for i in range(wormruns):
 			w=Worm(lattice)
 			w.run()
-			t3sq = t3sq + int(4*lattice.t3squared())
+			t3sq = t3sq + int(4*(lattice.t3()**2))
 
 		return t3sq/(4*wormruns)
