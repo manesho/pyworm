@@ -1,5 +1,7 @@
+*.swo
 *.swp
 __pycache__
 *.ipynb
 *.pyc
+*.dat
 
