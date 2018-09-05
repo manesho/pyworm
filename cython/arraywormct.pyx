@@ -139,22 +139,22 @@ class Site(object):
 			
 
 class Lattice(object):
-	def __init__(self,mu3=0, mu8=0, beta=1,s1=2, s2=2, ics=["u","u"]):
+	def __init__(self,mu3=0, beta=1,s1=2, s2=2, ics=["u","u"]):
 			self.s1 =s1
 			self.s2 =s2
 			self.nsites = s1*s2
 			self.beta = beta
 			#work with integer time:
 			self.tmax = 10000000000
-			self.sites= {(x1,x2):TestSite(coord =(x1,x2),
+			self.sites= {(x1,x2):Site(coord =(x1,x2),
 									initialspin = ics[self.isfund(x1,x2)],
 									neighbours =self.nblist(x1,x2),
 									isfundamental= self.isfund(x1,x2),
 									tmax= self.tmax,
 									)
 							for x1 in range(0,self.s1) for x2 in range(0, self.s2)}
-			self.wormdecayrules=rgen.generate_decayrules(mu3,mu8)
-			self.wormtransitionrules = rgen.generate_2f_transitio_nrules(mu3,mu8)
+			self.wormdecayrules=rgen.generate_decayrules(mu3)
+			self.wormtransitionrules = rgen.generate_2f_transitio_nrules(mu3)
 	def nblist(self,x1,x2):
 			return [((x1+1)%self.s1, x2),((x1-1)%self.s1, x2),(x1,(x2+1)%self.s2),(x1,(x2-1)%self.s2)]
 	
@@ -421,8 +421,8 @@ class Worm(object):
 
 
 
-def launch_simulation(beta =1 ,mu3=0,mu8=0, termsteps=1000, wormruns = 10000, ics=["u","u"]):
-		lattice = Lattice(beta=beta,mu3=mu3,mu8=mu8, s1 =2,s2=2, ics=ics)
+def launch_simulation(beta =1 ,mu3=0, termsteps=1000, wormruns = 10000, ics=["u","u"]):
+		lattice = Lattice(beta=beta,mu3=mu3, s1 =2,s2=2, ics=ics)
 		t3sq = int(0)
 		t3 = int(0)
 		for i in range(termsteps):
